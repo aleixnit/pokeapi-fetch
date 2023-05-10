@@ -25,7 +25,7 @@
           <h5 class="card-title" style="text-transform: capitalize">
             Lorepokemon
           </h5>
-          <a href="#" class="btn btn-success">Change to Shiny</a>
+          <button type="button" id="btnShiny" href="#" class="btn btn-success">Change to Shiny</button>
         </div>
       </div>
     </div>
@@ -49,6 +49,8 @@
     </div>
   </body>
   <script>
+
+    let dataFromApi;
     // 1. Cuando cambie el valor del selector, tenemos que detectar que opción hemos escogido. Probad que sois capaces de recuperar el valor seleccionado por el usuario con un console.log
 
     // 1. Seleccionamos el <select>
@@ -60,13 +62,30 @@
         const selectedPokemon = event.target.value;
 
         // Obtengo el pokemon de la API (un objeto)
-        const dataFromApi = await getPokemonFromAPI(selectedPokemon);
+        dataFromApi = await getPokemonFromAPI(selectedPokemon);
 
         // Actualizar el DOM
         updatePokemonInfo(dataFromApi.name, dataFromApi.sprites.front_default);
 
 
     });
+
+    // "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png"
+
+ 
+
+document.querySelector('#btnShiny').addEventListener('click', async (event) => {
+// document.querySelector('.card-img-top').src = urlImageShiny;
+updatePokemonShiny(dataFromApi.sprites.front_shiny);
+
+});
+
+function updatePokemonShiny(urlImageShiny) {
+  document.querySelector('.card-img-top').src = urlImageShiny;
+  document.querySelector('.card-img-top').classList.remove("d-none");
+
+
+}
 
     async function getPokemonFromAPI(pokemonName) {
         // De hacer una llamada a la API:   // https://pokeapi.co/api/v2/pokemon/{pokemonName}
