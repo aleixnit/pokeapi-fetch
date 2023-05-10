@@ -25,7 +25,9 @@
           <h5 class="card-title" style="text-transform: capitalize">
             Lorepokemon
           </h5>
-          <button type="button" id="btnShiny" href="#" class="btn btn-success">Change to Shiny</button>
+          <button type="button" id="btnShiny" href="#" class="btn btn-success">
+            Change to Shiny
+          </button>
         </div>
       </div>
     </div>
@@ -49,13 +51,15 @@
     </div>
   </body>
   <script>
-
     let dataFromApi;
+    let esShiny = false;
     // 1. Cuando cambie el valor del selector, tenemos que detectar que opción hemos escogido. Probad que sois capaces de recuperar el valor seleccionado por el usuario con un console.log
 
     // 1. Seleccionamos el <select>
     // 2. Capturamos el evento 'change'
-    document.querySelector('#select-pokemon').addEventListener('change', async (event) => {
+    document
+      .querySelector("#select-pokemon")
+      .addEventListener("change", async (event) => {
         // 3. en el objeto event tenemos información sobre el evento que acaba de ocurrir
         // 3.1 En la propiedad event.target tenemos el elemento del DOM que disparado dicho evento
         // 3.2 La propiedad event.target.value
@@ -66,50 +70,49 @@
 
         // Actualizar el DOM
         updatePokemonInfo(dataFromApi.name, dataFromApi.sprites.front_default);
-
-
-    });
+      });
 
     // "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png"
 
- 
+    document
+      .querySelector("#btnShiny")
+      .addEventListener("click", async (event) => {
+        // document.querySelector('.card-img-top').src = urlImageShiny;
+        esShiny = !esShiny;
+        updatePokemonShiny(dataFromApi.sprites.front_shiny);
+      });
 
-document.querySelector('#btnShiny').addEventListener('click', async (event) => {
-// document.querySelector('.card-img-top').src = urlImageShiny;
-updatePokemonShiny(dataFromApi.sprites.front_shiny);
-
-});
-
-function updatePokemonShiny(urlImageShiny) {
-  document.querySelector('.card-img-top').src = urlImageShiny;
-  document.querySelector('.card-img-top').classList.remove("d-none");
-
-
-}
+    function updatePokemonShiny(urlImageShiny) {
+      if (esShiny) {
+        document.querySelector(".card-img-top").src = urlImageShiny;
+      } else {
+        document.querySelector(".card-img-top").src =
+          dataFromApi.sprites.front_default;
+      }
+      document.querySelector(".card-img-top").classList.remove("d-none");
+    }
 
     async function getPokemonFromAPI(pokemonName) {
-        // De hacer una llamada a la API:   // https://pokeapi.co/api/v2/pokemon/{pokemonName}
-        const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
-        console.log('URL para la petición a la API: ', url);
+      // De hacer una llamada a la API:   // https://pokeapi.co/api/v2/pokemon/{pokemonName}
+      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+      console.log("URL para la petición a la API: ", url);
 
-        // 3. Utilizar la función fetch para hacer la llamada a esa URL
-        // y procesar los datos. Significa, asignar al <h5> del DOM el nombre del pokemon que hemos recuperado de la llamada. Y en la etiqueta <img> debemos establecer el atributo 'src' con el valor de la URL donde se ubica la imagen del pokemon
-        const response = await fetch(url);
+      // 3. Utilizar la función fetch para hacer la llamada a esa URL
+      // y procesar los datos. Significa, asignar al <h5> del DOM el nombre del pokemon que hemos recuperado de la llamada. Y en la etiqueta <img> debemos establecer el atributo 'src' con el valor de la URL donde se ubica la imagen del pokemon
+      const response = await fetch(url);
 
-        //convertimos la respuesta a un tipo de estructura de datos que pueda con JavaScript JSON-->Objeto
-        const data = await response.json();
+      //convertimos la respuesta a un tipo de estructura de datos que pueda con JavaScript JSON-->Objeto
+      const data = await response.json();
 
-        return data;
+      return data;
     }
 
     // La función dos parámetros: el nombre del Pokemon, ya la URL a la imagen
     function updatePokemonInfo(name, urlImage) {
-        // Actualizo el DOM
-        document.querySelector('.card-title').textContent = name;
-        document.querySelector('.card-img-top').src = urlImage;
-        document.querySelector('.card-img-top').classList.remove("d-none");
+      // Actualizo el DOM
+      document.querySelector(".card-title").textContent = name;
+      document.querySelector(".card-img-top").src = urlImage;
+      document.querySelector(".card-img-top").classList.remove("d-none");
     }
-
-
-</script>
+  </script>
 </html>
