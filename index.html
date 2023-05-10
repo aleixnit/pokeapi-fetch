@@ -50,47 +50,47 @@
   </body>
   <script>
     // 1. Cuando cambie el valor del selector, tenemos que detectar que opción hemos escogido. Probad que sois capaces de recuperar el valor seleccionado por el usuario con un console.log
+
     // 1. Seleccionamos el <select>
     // 2. Capturamos el evento 'change'
-    document
-      .querySelector("#select-pokemon")
-      .addEventListener("change", (event) => {
+    document.querySelector('#select-pokemon').addEventListener('change', async (event) => {
         // 3. en el objeto event tenemos información sobre el evento que acaba de ocurrir
         // 3.1 En la propiedad event.target tenemos el elemento del DOM que disparado dicho evento
-        // 3.2 La propiedad event.target.value nos da el valor de la opción seleccionada.
-
+        // 3.2 La propiedad event.target.value
         const selectedPokemon = event.target.value;
-        getPokemonFromAPI(selectedPokemon);
-      });
+
+        // Obtengo el pokemon de la API (un objeto)
+        const dataFromApi = await getPokemonFromAPI(selectedPokemon);
+
+        // Actualizar el DOM
+        updatePokemonInfo(dataFromApi.name, dataFromApi.sprites.front_default);
+
+
+    });
 
     async function getPokemonFromAPI(pokemonName) {
-      // De hacer una llamada a la API:   // https://pokeapi.co/api/v2/pokemon/{pokemonName}
-      const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+        // De hacer una llamada a la API:   // https://pokeapi.co/api/v2/pokemon/{pokemonName}
+        const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+        console.log('URL para la petición a la API: ', url);
 
-      console.log("URL para la petición a la API: ", url);
-      // 3. Utilizar la función fetch para hacer la llamada a esa URL
-      // y procesar los datos. Significa, asignar al <h5> del DOM el nombre del pokemon que hemos recuperado de la llamada. Y en la etiqueta <img> debemos establecer el atricuto 'src' con el valor de la URL donde se ubica la imagen del pokemon
-      getPokemonsApi(url);
+        // 3. Utilizar la función fetch para hacer la llamada a esa URL
+        // y procesar los datos. Significa, asignar al <h5> del DOM el nombre del pokemon que hemos recuperado de la llamada. Y en la etiqueta <img> debemos establecer el atributo 'src' con el valor de la URL donde se ubica la imagen del pokemon
+        const response = await fetch(url);
+
+        //convertimos la respuesta a un tipo de estructura de datos que pueda con JavaScript JSON-->Objeto
+        const data = await response.json();
+
+        return data;
     }
 
-    async function getPokemonsApi(url) {
-      // Hago una petición a la url de la API que va cambiando en función de la opción elegida.
-      let respuesta = await fetch(url);
-      let datos = await respuesta.json();
-      updatePokemonInfo(datos.name);
-      console.dir(datos);
-      return datos;
+    // La función dos parámetros: el nombre del Pokemon, ya la URL a la imagen
+    function updatePokemonInfo(name, urlImage) {
+        // Actualizo el DOM
+        document.querySelector('.card-title').textContent = name;
+        document.querySelector('.card-img-top').src = urlImage;
+        document.querySelector('.card-img-top').classList.remove("d-none");
     }
 
-    function updatePokemonInfo(name, urlPokemon) {
-        console.log(name,urlPokemon);
-      const imgElement = document.querySelector("img");
-      document.querySelector("h5.card-title").textContent = name;
-      // Debemos eliminar la clase 'd-none' del <img> para que se muestre el elemento HTML
-    //   imgElement.src = urlPokemon.sprites.front_default;
-      document.querySelector("img").classList.remove("d-none");
-    }
 
-    
-  </script>
+</script>
 </html>
